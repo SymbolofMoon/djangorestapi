@@ -7,7 +7,7 @@ class UserSerializer(serializers.ModelSerializer):
     email=serializers.EmailField(max_length=255, min_length=4)
     first_name=serializers.CharField(max_length=255,min_length=2)
     last_name=serializers.CharField(max_length=255,min_length=2)
-    username=serializers.CharField(max_length=255,min_length=2)
+    
 
 
     class Meta:
@@ -26,17 +26,20 @@ class UserSerializer(serializers.ModelSerializer):
 
 
     def create(self, validated_data):
-            user= User.objects.create(
-                username=validated_data['username'],
-                email=validated_data['email'],
-                first_name=validated_data['first_name'],
-                last_name=validated_data['last_name']
-            )
+            return User.objects.create_user(**validated_data)
 
-            user.set_password(validated_data['password'])
-            user.save()
 
-            return user
+
+
+class LoginSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(
+        max_length=65, min_length=8, write_only=True)
+    username = serializers.CharField(max_length=255, min_length=2)
+
+    class Meta:
+        model = User
+        fields = ['username', 'password']
+
 
 
 

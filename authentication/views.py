@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.generics import GenericAPIView
-from .serializers import UserSerializer
+from .serializers import UserSerializer, LoginSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from django.conf import settings
@@ -19,8 +19,6 @@ class RegisterView(GenericAPIView):
 
 
         if serializer.is_valid():
-            
-            
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -30,12 +28,14 @@ class RegisterView(GenericAPIView):
 
 class LoginView(GenericAPIView):
 
+    serializer_class=LoginSerializer
+
     def post(self,request):
         data=request.data
         username=data.get('username','')
-        print(username)
+        
         password=data.get('password', '')
-        print(password)
+        
         user=authenticate(request,username=username,password=password)
         
 
